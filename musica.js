@@ -1,3 +1,6 @@
+// musica.js
+// Command-line tool for managing the musica backend.
+// For more information, run `node musica --help`
 
 const program = require('commander');
 const { execFile } = require('child_process');
@@ -26,7 +29,7 @@ program
   .action(() => {
     console.log("Checking for ffmpeg...");
     ffmpeg_check().then((version)=>{
-      console.log(`ffmpeg ${version} found.`);
+      console.log(`ffmpeg ${version||''} found.`);
       process.exit(0);
     }).catch((error)=>{
       console.log(`Error:${error}`);
@@ -140,12 +143,12 @@ function ffmpeg_check() {
       if (err) return rej("ffmpeg binary not found. Is it on the path?");
 
       //Does it behave like expected?
-      let match = /^ffmpeg version ((\d+)\.(\d+)\.(\d+))/.exec(stdout);
+      let match = /^ffmpeg version ((\d+)\.(\d+)\.(\d+))?/.exec(stdout);
       if (!match) return rej("ffmpeg response not recognised. Are you sure it is the proper version?");
 
       //Is it a recent enough version?
       let [,version,major,minor,patch] = match;
-      if ( [major,minor,patch] < [2, 8, 1] ) {
+      if ( version && [major,minor,patch] < [2, 8, 1] ) {
         console.error(`Warning: ffmpeg version (${version}) is older than as tested. (2.8.1)`);
       }
       res(version);

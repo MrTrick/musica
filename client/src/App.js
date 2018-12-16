@@ -28,7 +28,7 @@ class App extends Component {
         <h1>MUSICA</h1>
         <ul>
           {this.state.metadata.map((item)=>
-            <li key={item.id}><a href={item.src.mp3}>{item.title} {item.author}</a></li>
+            <li key={item.id}><a href={item.src.mp3}>{item.title||'untitled'} {item.author}</a></li>
           )}
         </ul>
       </div>
