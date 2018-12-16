@@ -5,9 +5,10 @@ _(Project in alpha state, not yet suitable for general use)_
 ----
 
 ## Overview
-**musica** implements a stateless express.js server to handle metadata and (tbd) social listening functionality.
-Media storage and delivery is delegated to an S3 (or S3-like) CDN.
-Media upload and application managmement is implemented in a separate command-line tool.
+**musica** is a simple cloud-compatible service for delivering audio files.
+- Stateless express.js server to handle metadata and (tbd) social listening functionality.
+- Media storage and delivery delegated to an S3 (or S3-like) CDN.
+- Media upload and application managmement implemented in a separate command-line tool.
 
 ## Future Improvements
 The client side needs significant work, obviously.
@@ -50,7 +51,7 @@ node musica check-ffmpeg
 
 **musica** requires an AWS S3-compatible storage server. _(for one option, see **Minio**)_
 
-#### Minio
+### 3a. Minio
 **Minio** is an S3-compatible object storage server.
 It can be built and run using **Docker**:
 ```
