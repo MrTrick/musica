@@ -5,10 +5,12 @@ const util = require('util');
 const Minio = require('minio');
 const mm = require('music-metadata');
 const uuidv4 = require('uuid/v4');
-const tmp = require('tmp');
 const plimit = require('p-limit');
 const resolve = Promise.resolve.bind(Promise);
 const reject = Promise.reject.bind(Promise);
+const get_temp_dir = util.promisify(require('tmp').dir);
+const fs = require('fs');
+const writeFile = util.promisify(fs.writeFile);
 
 //==============================================================================
 
@@ -83,45 +85,44 @@ program
       get_client(),
       get_temp_dir()
     ]).then(([client, tmp_dir])=>{
-      const path = get_bucket_path();
 
-      files.map((file)=>{
+      var upload_list = [];
+      Promise.all(files.map((file)=>{
         const id = uuidv4();
 
         console.log(`Processing file ${file}:`);
-        return scan_file(file)
-
-        .then((metadata)=>{
+        return scan_file(file).then((metadata)=>{
           console.log(`  Scanned successfully:`);
           console.log(`    Artist: ${metadata.artist}, Title: ${metadata.title}`);
 
           console.log(`  Converting file ${file}...`);
-          return Promise.all([
-            ffmpeg_convert(file, `${tmp_dir}/${id}.mp3`),
-            ffmpeg_convert(file, `${tmp_dir}/${id}.webm`)
-          ])
-          .then((transcoded_files)=>{
+          return Promise.all(['mp3','webm'].map((ext)=>
+            ffmpeg_convert(file, `${tmp_dir}/${id}.${ext}`)
+            .then(()=>upload_list.push([`${tmp_dir}/${id}.${ext}`, `${id}.${ext}`]))
+          ))
+          .then(()=>{
             console.log("  Completed file conversions");
             console.log("  Building and saving metadata...");
             metadata.id = id;
             metadata.created = (new Date()).toISOString();
             metadata.src = {
-              'mp3': `${path}${id}.mp3`,
-              'webm': `${path}${id}.webm`,
+              'mp3': `${id}.mp3`,
+              'webm': `${id}.webm`,
             };
-
-            return Promise.all([
-              client.putObject(bucketName, `${id}.json`, JSON.stringify(metadata), 'application/json' ),
-              client.fPutObject(bucketName, `${id}.mp3`, transcoded_files[0] ),
-              client.fPutObject(bucketName, `${id}.webm`, transcoded_files[1] )
-            ])
-            .then((x)=>{
-              console.log(x);
-              console.log("  Upload complete.")
-            });
+            delete metadata.picture; //(if set will be an array of images, remove for now)
+            return writeFile(`${tmp_dir}/${id}.json`, JSON.stringify(metadata))
+                  .then(()=>upload_list.push([`${tmp_dir}/${id}.json`, `metadata/${id}.json`]));
           });
         });
-      });
+      }))
+      .then(()=>{
+        console.log("Files ready to upload, uploading...");
+        return Promise.all(upload_list.map(([from,to])=>{
+          console.log(`  ${to}`);
+          return client.fPutObject(bucketName, to, from);
+        }));
+      })
+      .then(()=>{ console.log("Success."); });
     });
 
   });
@@ -134,7 +135,7 @@ program
  */
 function ffmpeg_check() {
   return new Promise((res, rej) => {
-    exec('ffmpeg',['-version'], (err, stdout, stderr) => {
+    execFile('ffmpeg',['-version'], (err, stdout, stderr) => {
       //Is the tool installed/available?
       if (err) return rej("ffmpeg binary not found. Is it on the path?");
 
@@ -180,16 +181,6 @@ function scan_file(file) {
     metadata.format = raw.format;
     return metadata;
   });
-};
-
-/**
- * Wrap a promise around 'create temporary directory'
- * @return Promise resolving with the dir name
- */
-function get_temp_dir() {
-  return new Promise((res,rej)=>
-    tmp.dir((err, tmp_dir, cleanup)=>err ? rej(err) : res(tmp_dir))
-  );
 }
 
 //==============================================================================
@@ -235,14 +226,7 @@ function get_client() {
   }
 }
 
-/**
- * Get the URL these objects can be accessed at.
- * @return {[type]} [description]
- */
-function get_bucket_path() {
-  return `${endPointUseSSL?'https':'http'}://${endPointServer}:${endPointPort}/${bucketName}/`;
-}
-
 //==============================================================================
 
 program.parse(process.argv);
+if (program.args.length == 0) program.help();
