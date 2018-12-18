@@ -81,5 +81,6 @@ _(Any format supported by both ffmpeg and the npm 'music-metadata' package can b
 npm start
 ```
 The integrated react.js client will auto-launch in your browser.
-![rough around the edges...](https://raw.githubusercontent.com/mrtrick/musica/master/doc/screenshot.png)
+![rough around the edges...](https://github.com/MrTrick/musica/blob/master/docs/screenshot.jpg?raw=true)
+
 _(There's not much to look at yet!)_
