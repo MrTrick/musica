@@ -44,13 +44,15 @@ program
       process.exit(1);
     }
 
+    console.log(`Have ${files.length} files to process...`)
+
     const count = { processed: 0, failed: 0 };
     const throttle = plimit(5);
     const throttledIngest = (file)=>throttle(()=>{
       console.log(`Processing ${file}...`);
       return ingestFile(file)
         .then((id)=>{
-          console.log(`Finished processing ${file}. ID is ${id}.`);
+          console.log(`Finished processing ${file}. ID is ${id}.\n`);
           count.processed++;
         })
         .catch((err)=>{
@@ -70,6 +72,11 @@ program
   });
 
 //==============================================================================
+
+program.on('command:*', function () {
+  console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args[0]);
+  process.exit(1);
+});
 
 program.parse(process.argv);
 if (program.args.length == 0) program.help();

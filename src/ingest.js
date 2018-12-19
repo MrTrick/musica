@@ -125,7 +125,7 @@ function ingestFile(file) {
   //Resolve when the audio is saved and
   // the temp files have been cleaned up,
   // with the id of the audio file.
-  return Promise.all([saved, cleanedUp]).then(getId);
+  return Promise.all([saved, cleanedUp]).then(()=>getId);
 }
 
 //==============================================================================
