@@ -56,7 +56,7 @@ node musica check-ffmpeg
 It can be built and run using **Docker**:
 ```
 docker pull minio/minio
-docker run -p 9000:9000 --name minio1 -e "MINIO_ACCESS_KEY=SOMETHINGSOMETHINGEXAMPLE" -e "MINIO_SECRET_KEY=SOMETHINGSOMETHIGNSOMETHINGSECRETEXAMPLE" minio/minio server
+docker run -p 9000:9000 --name minio1 -e "MINIO_ACCESS_KEY=SOMETHINGSOMETHINGEXAMPLE" -e "MINIO_SECRET_KEY=SOMETHINGSOMETHIGNSOMETHINGSECRETEXAMPLE" minio/minio server /data
 ```
 Ensure that the details passed to the Docker instance match those configured in your **musica** environmental variables.
 
