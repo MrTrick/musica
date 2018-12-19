@@ -1,3 +1,10 @@
+/**
+ * server.js
+ * Entry point for the musica server
+ * @license MIT License (c) copyright 2018 Patrick Barnes
+ * @author Patrick Barnes
+ */
+
 const express = require('express');
 const morgan = require('morgan');
 const app = express();

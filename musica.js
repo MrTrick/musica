@@ -1,6 +1,10 @@
-// musica.js
-// Command-line tool for managing the musica backend.
-// For more information, run `node musica --help`
+/**
+ * musica.js
+ * Command-line tool for managing the musica backend.
+ * For more information, run `node musica --help`
+ * @license MIT License (c) copyright 2018 Patrick Barnes
+ * @author Patrick Barnes
+ */
 
 const program = require('commander');
 const plimit = require('p-limit');
