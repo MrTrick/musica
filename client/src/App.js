@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-
 import theme from './theme';
-import PlayerBar from './PlayerBar';
+import Player from './Player';
+import Tracks from './Tracks';
 
 class App extends Component {
   state = {
@@ -31,19 +28,22 @@ class App extends Component {
   };
 
   render() {
+    const {metadata}=this.state;
     return (<MuiThemeProvider theme={theme}>
       <CssBaseline/>
-      <PlayerBar />
-      <List>
-        {this.state.metadata.map((item,i)=>
-          <ListItem key={i}><a href={item.src.mp3}>
-            <ListItemText primary={(item.title||'untitled')} secondary={item.artist} />
-          </a></ListItem>
-        )}
-      </List>
+      <Player />
+      <Tracks tracks={metadata} />
+
+
     </MuiThemeProvider>);
   }
 }
-
+// <List>
+//   {this.state.metadata.map((item,i)=>
+//     <ListItem key={i}><a href={item.src.mp3}>
+//       <ListItemText primary={(item.title||'untitled')} secondary={item.artist} />
+//     </a></ListItem>
+//   )}
+// </List>
 
 export default App;

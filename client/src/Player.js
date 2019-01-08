@@ -13,6 +13,8 @@ import ShuffleIcon from '@material-ui/icons/Shuffle';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPrevIcon from '@material-ui/icons/SkipPrevious';
 
+import {hhmmss} from './helpers';
+
 const BigPlayIcon = function() {
   return (<PlayIcon style={{height:38,width:38}} />);
 }
@@ -20,20 +22,12 @@ const BigPauseIcon = function() {
   return (<PauseIcon style={{height:38,width:38}} />);
 }
 
-function hhmmss(s) {
-  const digit = (n)=>String(Math.floor(n)).padStart(2,'0');
-  if (s > 60*60) {
-    return `${Math.floor(s/60/60)}:${digit((s/60)%60)}:${digit(s%60)}`;
-  } else {
-    return `${digit((s/60)%60)}:${digit(s%60)}`;
-  }
-}
 
 const Logo = function() {
   return (<Typography component="h3" variant="h3">MUSICA</Typography>);
 };
 
-class PlayerBar extends Component {
+class Player extends Component {
   render() {
     const { isPlaying, title, artist, album, position, length } = this.props;
     const progressLabel = isPlaying ? `${hhmmss(position)} / ${hhmmss(length)}` : '';
@@ -60,7 +54,7 @@ class PlayerBar extends Component {
   }
 }
 
-PlayerBar.propTypes = {
+Player.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   artist: PropTypes.string.isRequired,
@@ -70,7 +64,7 @@ PlayerBar.propTypes = {
 }
 
 //TODO: Remove these placeholder values
-PlayerBar.defaultProps = {
+Player.defaultProps = {
   isPlaying: false,
   title: "The Sound of Silence",
   artist: "Simon & Garfunkel",
@@ -79,4 +73,4 @@ PlayerBar.defaultProps = {
   length: 187
 };
 
-export default PlayerBar;
+export default Player;
