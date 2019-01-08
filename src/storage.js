@@ -165,6 +165,30 @@ class Storage {
         return this.client.setBucketPolicy(this.bucketName, JSON.stringify(standardBucketPolicy));
       });
   }
+  //============================================================================
+
+  /**
+   * Remove every song (audio and metadata) from storage
+   * Will not run unless 'force': true is used.
+   * @return Promise that resolves when the store is initialised.
+   */
+  clearStorage(options) {
+    console.log("Listing objects in storage...");
+    const stream = this.client.listObjects(this.bucketName, '', true);
+    const listObjects = getStream.array(stream);
+
+    return listObjects.then((list)=>{
+      console.log(`Found ${list.length} objects.`);
+      if (!list.length) {
+        return Promise.resolve();
+      } else if (!options.force) {
+        return Promise.reject("Will not clear storage without --force option.");
+      }
+      console.log(`Removing objects...`);
+      var names = list.map(({name})=>name);
+      return this.client.removeObjects(this.bucketName, names);
+    });
+  }
 }
 
 module.exports = Storage;

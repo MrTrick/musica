@@ -48,7 +48,7 @@ program
       process.exit(1);
     }
 
-    console.log(`Have ${files.length} files to process...`)
+    console.log(`Have ${files.length} files to process...`);
 
     const count = { processed: 0, failed: 0 };
     const throttle = plimit(5);
@@ -72,6 +72,25 @@ program
         console.log(`Could not process ${count.failed} audio tracks.`);
 
         process.exit(count.failed ? 1 : 0);
+      });
+  });
+
+//----------------------------------------------------------------------------
+
+program
+  .command('clear')
+  .description('Remove any data (audio and metadata) from the data store.')
+  .option('-f, --force', 'Must be set, to confirm removal')
+  .action(function(options) {
+    console.log("Clearing all data...");
+    const storage = new Storage();
+    storage.clearStorage(options)
+      .then(()=>{
+        console.log("Data store cleared successfully.");
+        process.exit(0);
+      }).catch((err)=>{
+        console.error("Error: "+err);
+        process.exit(1);
       });
   });
 
