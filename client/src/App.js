@@ -3,8 +3,9 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import theme from './theme';
-import Player from './Player';
+import NavBar from './NavBar';
 import Tracks from './Tracks';
+import Player from './Player';
 
 class App extends Component {
   state = {
@@ -31,19 +32,12 @@ class App extends Component {
     const {metadata}=this.state;
     return (<MuiThemeProvider theme={theme}>
       <CssBaseline/>
-      <Player />
+      <NavBar/>
       <Tracks tracks={metadata} />
-
+      <Player />
 
     </MuiThemeProvider>);
   }
 }
-// <List>
-//   {this.state.metadata.map((item,i)=>
-//     <ListItem key={i}><a href={item.src.mp3}>
-//       <ListItemText primary={(item.title||'untitled')} secondary={item.artist} />
-//     </a></ListItem>
-//   )}
-// </List>
 
 export default App;
