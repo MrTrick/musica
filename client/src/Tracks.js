@@ -12,43 +12,58 @@ import DurationIcon from '@material-ui/icons/AvTimer';
 
 import {hhmmss} from './helpers';
 
-// function ListItemLink(props) {
-//   return <ListItem button component="a" {...props} />;
-// }
+
+function Head(props) {
+  return (<TableHead {...props}>
+    <TableRow>
+      <TableCell>Title</TableCell>
+      <TableCell><DurationIcon fontSize="inherit" aria-label="Duration" /></TableCell>
+      <TableCell>Artist</TableCell>
+      <TableCell>Album</TableCell>
+      <TableCell>...</TableCell>
+    </TableRow>
+  </TableHead>);
+}
+
+Head.propTypes = {
+
+};
+
+function Row(props) {
+  const { track } = props;
+
+  return (
+    <TableRow hover={true} style={{cursor:'pointer'}}>
+      <TableCell component="th" scope="row">
+        {track.title||'Untitled'}
+      </TableCell>
+      <TableCell>{hhmmss(track.format.duration)}</TableCell>
+      <TableCell>
+        {track.artist}
+        {track.albumartist && track.albumartist !== track.artist && (
+          <Typography style={{display:'inline'}} color="textSecondary"> - {track.albumartist}</Typography>
+        )}
+      </TableCell>
+      <TableCell>{track.album}</TableCell>
+      <TableCell></TableCell>
+    </TableRow>
+  );
+}
+
+Row.propTypes = {
+  track: PropTypes.object.isRequired,
+  key: PropTypes.any.isRequired
+};
+
 
 function Tracks(props) {
   const { tracks } = props;
   return (
     <Paper>
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell><DurationIcon fontSize="inherit" aria-label="Duration" /></TableCell>
-            <TableCell>Artist</TableCell>
-            <TableCell>Album</TableCell>
-            <TableCell>...</TableCell>
-          </TableRow>
-        </TableHead>
+        <Head/>
         <TableBody>
-          {tracks.map((track) => {
-            return (
-              <TableRow key={track.id}>
-                <TableCell component="th" scope="row">
-                  {track.title||'Untitled'}
-                </TableCell>
-                <TableCell>{hhmmss(track.format.duration)}</TableCell>
-                <TableCell>
-                  {track.artist}
-                  {track.albumartist && track.albumartist !== track.artist && (
-                    <Typography style={{display:'inline'}} color="textSecondary"> - {track.albumartist}</Typography>
-                  )}
-                </TableCell>
-                <TableCell>{track.album}</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            );
-          })}
+          {tracks.map((track) => (<Row track={track} key={track.id}/>))}
         </TableBody>
       </Table>
     </Paper>
