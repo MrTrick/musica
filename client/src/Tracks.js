@@ -89,9 +89,9 @@ const StyledRow = withStyles(rowStyles)(Row);
 //------------------------------------------------------------------------------
 const styles = (theme) => ({
   root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2,
+    margin: theme.spacing.unit * 1,
+    marginBottom: '5em'
   }
 });
 
