@@ -7,7 +7,9 @@
     "prepare": "cd ./client && npm install",
     "test-lint":"eslint **/*.js --ignore-pattern node_modules/ --ignore-pattern client/",
     "test-jest":"jest --testPathIgnorePatterns client",
-    "test":"run-s test-lint test-jest",
+    "test-server":"run-s test-lint test-jest",
+    "test-client":"cd ./client && npm test",
+    "test":"run-s test-server test-client",
     "start-server": "nodemon server.js",
     "start-client": "cd ./client && npm run start",
     "start": "run-p start-server start-client"
