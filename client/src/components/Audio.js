@@ -30,6 +30,7 @@ class Audio extends Component {
       onEnd={handleTrackEnd}
       onPlay={onPlay} onPause={onPause} onStop={onStop}
       ref={(ref) => (this.player = ref)}
+      html5={true}
     />);
   };
 }

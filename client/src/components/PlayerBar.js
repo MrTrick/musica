@@ -76,7 +76,7 @@ class PlayerBar extends Component {
             </Typography>
           </div>
 
-          {isPlaying && (<Typography component="h6" variant="h6">{progressLabel}</Typography>)}
+          {!!progress && (<Typography component="h6" variant="h6">{progressLabel}</Typography>)}
         </Toolbar>
 
 
