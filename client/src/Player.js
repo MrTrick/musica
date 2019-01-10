@@ -99,7 +99,7 @@ function Player(props) {
 
     </AppBar>
   </Tooltip>);
-}
+};
 
 Player.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
@@ -108,7 +108,7 @@ Player.propTypes = {
   album: PropTypes.string,
   position: PropTypes.number,
   length: PropTypes.number.isRequired
-}
+};
 
 //TODO: Remove these placeholder values
 Player.defaultProps = {
