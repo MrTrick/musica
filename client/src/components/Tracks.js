@@ -11,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DurationIcon from '@material-ui/icons/AvTimer';
 
-import {hhmmss} from './helpers';
+import {hhmmss} from '../helpers';
 
 //------------------------------------------------------------------------------
 const headStyles = (theme) => ({
@@ -50,14 +50,22 @@ const StyledHead = withStyles(headStyles)(Head);
 
 //------------------------------------------------------------------------------
 const rowStyles = (theme) => ({
-  root: {}
+  root: {
+    cursor: 'pointer'
+  },
+  current: {
+    backgroundColor: theme.palette.type === 'light'
+          ? 'rgba(0, 0, 0, 0.14)'
+          : 'rgba(255, 255, 255, 0.20)',
+  }
 });
 
 function Row(props) {
-  const { classes, track } = props;
+  const { classes, track, isCurrent } = props;
+  const rowClasses = isCurrent ? [classes.root, classes.current] : [classes.root];
 
   return (
-    <TableRow hover={true} style={{cursor:'pointer'}} className={classes.root}>
+    <TableRow hover={true} className={rowClasses}>
       <TableCell component="th" scope="row">
         {track.title||'Untitled'}
       </TableCell>
@@ -96,13 +104,17 @@ const styles = (theme) => ({
 });
 
 function Tracks(props) {
-  const { classes, tracks } = props;
+  const { classes, tracks, current } = props;
   return (
     <Paper className={classes.root}>
       <Table>
         <StyledHead/>
         <TableBody>
-          {tracks.map((track) => (<StyledRow track={track} key={track.id}/>))}
+          {tracks.map((track) => (<StyledRow
+            track={track}
+            isCurrent={current.id === track.id}
+            key={track.id}
+          />))}
         </TableBody>
       </Table>
     </Paper>
@@ -111,6 +123,7 @@ function Tracks(props) {
 
 Tracks.propTypes = {
   tracks: PropTypes.array.isRequired,
+  current: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Tracks);

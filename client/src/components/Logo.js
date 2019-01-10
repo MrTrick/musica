@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo from '../assets/logo.svg';
 
 function Logo(props) {
   return (<img src={logo} aria-label="Musica Logo" alt="Musica Logo" />);

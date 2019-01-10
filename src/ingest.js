@@ -44,9 +44,12 @@ function scanFile(file) {
  * @return Promise resolving with the name of the tmp file
  */
 function transcodeFile(from, format) {
+  const options = ['-n', '-v', '20', '-i', from, '-f', format];
+  if (format == 'webm') options.push('-dash', '1');
+
   const getFileName = tempFileName();
   return getFileName
-    .then((to)=>execFile(ffmpeg.path, ['-n', '-v', '20', '-i', from, '-f', format, to]))
+    .then((to)=>execFile(ffmpeg.path, [...options, to]))
     .then(()=>getFileName);
 }
 

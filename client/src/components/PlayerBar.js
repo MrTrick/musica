@@ -13,7 +13,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPrevIcon from '@material-ui/icons/SkipPrevious';
 
-import {hhmmss} from './helpers';
+import {hhmmss} from '../helpers';
 
 const BigPlayIcon = function() {
   return (<PlayIcon style={{height:38,width:38}} />);
@@ -66,7 +66,7 @@ const styles = (theme) => ({
   }
 });
 
-function Player(props) {
+function PlayerBar(props) {
   const { classes, isPlaying, title, artist, album, position, length } = props;
   const progressLabel = isPlaying ? `${hhmmss(position)} / ${hhmmss(length)}` : '';
   const progressNumber = isPlaying ? Math.floor(100*position/length) : 0;
@@ -101,7 +101,7 @@ function Player(props) {
   </Tooltip>);
 };
 
-Player.propTypes = {
+PlayerBar.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   artist: PropTypes.string.isRequired,
@@ -111,7 +111,7 @@ Player.propTypes = {
 };
 
 //TODO: Remove these placeholder values
-Player.defaultProps = {
+PlayerBar.defaultProps = {
   isPlaying: true,
   title: "The Sound of Silence",
   artist: "Simon & Garfunkel",
@@ -120,4 +120,4 @@ Player.defaultProps = {
   length: 187
 };
 
-export default withStyles(styles)(Player);
+export default withStyles(styles)(PlayerBar);
