@@ -40,13 +40,11 @@ function scanFile(file) {
 /**
  * Convert and copy the given file into a new format
  * @param  {string} from Path to the input file
- * @param  {string} format Format ('mp3', 'webm', etc) to conver the file
+ * @param  {string} format Format ('mp3', 'ogg', etc) to conver the file
  * @return Promise resolving with the name of the tmp file
  */
 function transcodeFile(from, format) {
   const options = ['-n', '-v', '20', '-i', from, '-f', format];
-  if (format == 'webm') options.push('-dash', '1');
-
   const getFileName = tempFileName();
   return getFileName
     .then((to)=>execFile(ffmpeg.path, [...options, to]))
@@ -60,7 +58,7 @@ function transcodeFile(from, format) {
  *
  * - Generate an id hash,
  * - Scan the file for metadata,
- * - Transcode the audio into webm and mp3 formats,
+ * - Transcode the audio into ogg and mp3 formats,
  * - Upload metadata and audio.
  *
  * @param  {string} file  Location of the audio file
@@ -74,7 +72,7 @@ function ingestFile(file) {
   var getFileMetadata = scanFile(file);
   var checkExists = getId.then((id)=>storage.existsMetadata(id));
   var transcodedMp3 = transcodeFile(file, 'mp3');
-  var transcodedWebm = transcodeFile(file, 'webm');
+  var transcodedOgg = transcodeFile(file, 'ogg');
 
   //Notify users of progress
   getId.then((id)=>{
@@ -86,13 +84,13 @@ function ingestFile(file) {
   transcodedMp3.then(()=>{
     console.log(`  Transcoded audio file to mp3`);
   });
-  transcodedWebm.then(()=>{
-    console.log(`  Transcoded audio file to webm`);
+  transcodedOgg.then(()=>{
+    console.log(`  Transcoded audio file to ogg`);
   });
 
   //Save the audio into the server when ready
-  const saved = Promise.all([getId, checkExists, getFileMetadata, transcodedMp3, transcodedWebm])
-    .then(([id, exists, metadata, mp3file, webmfile])=>{
+  const saved = Promise.all([getId, checkExists, getFileMetadata, transcodedMp3, transcodedOgg])
+    .then(([id, exists, metadata, mp3file, oggfile])=>{
       //Oops - don't overwrite if already there.
       if (exists) {
         console.log(`  Warning - the file ${id} has already been uploaded`);
@@ -103,24 +101,21 @@ function ingestFile(file) {
       console.log(`  Saving metadata...`);
       metadata.id = id;
       metadata.created = (new Date()).toISOString();
-      metadata.src = {
-        'mp3': `${id}.mp3`,
-        'webm': `${id}.webm`,
-      };
+      metadata.src = [`${id}.ogg`,`${id}.mp3`];
       const savedMetadata = storage.writeMetadata(metadata);
 
       //Save the transcoded media files
       const savedMp3 = storage.writeMediaFile(mp3file, `${id}.mp3`);
-      const savedWebm = storage.writeMediaFile(webmfile, `${id}.webm`);
+      const savedOgg = storage.writeMediaFile(oggfile, `${id}.ogg`);
 
-      return Promise.all([savedMetadata, savedMp3, savedWebm]);
+      return Promise.all([savedMetadata, savedMp3, savedOgg]);
     });
 
   //Clean up the temporary files after they're no longer needed.
   function cleanup() {
     return Promise.all([
       transcodedMp3.then(unlink),
-      transcodedWebm.then(unlink)
+      transcodedOgg.then(unlink)
     ]);
   }
   const cleanedUp = saved.then(cleanup, cleanup);
