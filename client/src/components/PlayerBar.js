@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -24,37 +24,6 @@ const BigPauseIcon = function() {
 
 //------------------------------------------------------------------------------
 
-class SimpleSlider extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: props.value
-    };
-  }
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  render() {
-    const { classes, label } = this.props;
-    const { value } = this.state;
-
-    return (<Slider
-      classes={classes}
-      value={value}
-      aria-label={label}
-      onChange={this.handleChange}
-    />);
-  }
-}
-
-SimpleSlider.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-//------------------------------------------------------------------------------
-
 const styles = (theme) => ({
   root: {
     top: 'auto',
@@ -68,54 +37,58 @@ const styles = (theme) => ({
   }
 });
 
-function PlayerBar(props) {
-  const { classes, current, isPlaying, position } = props;
-  const { title, artist, album, format } = current||{};
-  const { duration } = format||{};
+class PlayerBar extends Component {
+  render() {
+    const { classes, current, isPlaying, progress } = this.props;
+    const { title, artist, album, format } = current||{};
+    const { duration } = format||{};
 
-  const progressLabel = isPlaying ? `${hhmmss(position)} / ${hhmmss(duration)}` : '';
-  const progressNumber = isPlaying ? Math.floor(100*position/duration) : 0;
-  const sliderClasses = {
-    track: classes.sliderTrack,
-    thumb: classes.sliderThumb
-  };
+    const progressLabel = progress ? `${hhmmss(progress)} / ${hhmmss(duration)}` : '';
+    const progressNumber = progress ? 100*progress/duration : 0;
+    const sliderClasses = {
+      track: classes.sliderTrack,
+      thumb: classes.sliderThumb
+    };
 
-  const { handlePlay, handlePause, handlePrev, handleNext } = props;
-  const noDefault = (f) => (e => { e.preventDefault(); f(); });
+    const { handlePlay, handlePause, handlePrev, handleNext } = this.props;
+    const noDefault = (f) => (e => { e.preventDefault(); f(); });
 
-  return (<Tooltip title={progressLabel} aria-label={progressLabel}>
-    <AppBar position="fixed" className={classes.root}>
-      <SimpleSlider classes={sliderClasses}
-        value={progressNumber}
-        aria-label="Progress"
-      />
-      <Toolbar>
-        <IconButton aria-label="Previous Track" onClick={noDefault(handlePrev)}><SkipPrevIcon /></IconButton>
-        {isPlaying ? (
-          <IconButton aria-label="Pause" onClick={noDefault(handlePause)}><BigPauseIcon/></IconButton>
-        ) : (
-          <IconButton aria-label="Play" onClick={noDefault(handlePlay)}><BigPlayIcon/></IconButton>
-        )}
-        <IconButton aria-label="Next Track" onClick={noDefault(handleNext)}><SkipNextIcon /></IconButton>
+    return (<Tooltip title={progressLabel} aria-label={progressLabel}>
+      <AppBar position="fixed" className={classes.root}>
+        <Slider classes={sliderClasses}
+          value={progressNumber}
+          aria-label="Progress"
+        />
+        <Toolbar>
+          <IconButton aria-label="Previous Track" onClick={noDefault(handlePrev)}><SkipPrevIcon /></IconButton>
+          {isPlaying ? (
+            <IconButton aria-label="Pause" onClick={noDefault(handlePause)}><BigPauseIcon/></IconButton>
+          ) : (
+            <IconButton aria-label="Play" onClick={noDefault(handlePlay)}><BigPlayIcon/></IconButton>
+          )}
+          <IconButton aria-label="Next Track" onClick={noDefault(handleNext)}><SkipNextIcon /></IconButton>
 
-        <div style={{flexGrow:1}}>
-          <Typography component="h5" variant="h5">{title}</Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {artist}
-            {album && (<em> ({album})</em>)}
-          </Typography>
-        </div>
-      </Toolbar>
+          <div style={{flexGrow:1}}>
+            <Typography component="h5" variant="h5">{title}</Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {artist}
+              {album && (<em> ({album})</em>)}
+            </Typography>
+          </div>
+
+          {isPlaying && (<Typography component="h6" variant="h6">{progressLabel}</Typography>)}
+        </Toolbar>
 
 
-    </AppBar>
-  </Tooltip>);
+      </AppBar>
+    </Tooltip>);
+  }
 };
 
 PlayerBar.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   current: PropTypes.object,
-  position: PropTypes.number,
+  progress: PropTypes.number,
   handlePlay: PropTypes.func.isRequired,
   handlePause: PropTypes.func.isRequired,
   handlePrev: PropTypes.func.isRequired,

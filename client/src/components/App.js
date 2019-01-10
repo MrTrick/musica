@@ -35,8 +35,8 @@ class App extends Component {
   };
 
   render() {
-    const { isLoading, isLoaded, isPlaying, tracks, current } = this.props;
-    const { onSelectTrack, onPlayTrack, onPlay, onPause, onPrev, onNext } = this.actions;
+    const { isLoading, isLoaded, isPlaying, tracks, current, progress } = this.props;
+    const { onSelectTrack, onPlayTrack, onPlay, onPause, onPrev, onNext, onProgress } = this.actions;
 
     return (<>
       <NavBar/>
@@ -50,6 +50,7 @@ class App extends Component {
       <PlayerBar
         current={current}
         isPlaying={isPlaying}
+        progress={progress}
         handlePlay={onPlay}
         handlePause={onPause}
         handlePrev={onPrev}
@@ -59,6 +60,7 @@ class App extends Component {
         current={current}
         isPlaying={isPlaying}
         handleTrackEnd={onNext}
+        handleProgress={onProgress}
       />
     </>);
   }

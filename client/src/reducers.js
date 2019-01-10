@@ -7,7 +7,8 @@ export const initialState = {
 
   tracks: [],
   current: null,
-  index: 0
+  index: 0,
+  progress: 0
 };
 
 export const doLoadTracks = createAction('doLoadTracks');
@@ -67,7 +68,11 @@ export default createReducer(
       const { index, tracks } = state;
       const prev = Math.max(index - 1, 0);
       return {...state, index:prev, current:tracks[prev]};
-    }
+    },
+
+    [onProgress]: (state, progress) => ({...state,
+      progress
+    })
   },
   initialState
 );
