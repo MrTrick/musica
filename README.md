@@ -1,17 +1,24 @@
 # musica
 Simple cloud music Library / music Player  
-_(Project in alpha state, not yet suitable for general use)_
+_Project in alpha state, not yet suitable for general use._
+
+![Musica Logo](https://github.com/MrTrick/musica/blob/master/clients/src/assets/logo.svg?raw=true)
 
 ----
 
 ## Overview
-**musica** is a simple cloud-compatible service for delivering audio files.
+**musica** is a simple cloud-compatible music library and player.
 - Stateless express.js server to handle metadata and (tbd) social listening functionality.
 - Media storage and delivery delegated to an S3 (or S3-like) CDN.
-- Media upload and application managmement implemented in a separate command-line tool.
+- Media upload and application management implemented in a separate command-line tool.
+
+- Front-end built using React, Material-UI, Redux, Howler.
 
 ## Future Improvements
-The client side needs significant work, obviously.
+The basic music player functionality is in place, but needs further work to reach
+parity with other players.
+
+### Backend
 
 The backend could be improved in several areas:
 - Using the 'notification' feature in S3/Minio to capture any changes to the stored audio files or metadata.  
@@ -19,6 +26,22 @@ The backend could be improved in several areas:
 - Choosing a different location for metadata, to better support user interaction like searching.
 - Caching the index rather than fetching it anew for each request.
 - Including the upload/management features in the same API, rather than with a separate tool.
+- More tests.
+
+### Frontend
+
+Missing features:
+- Session support - keep the current track (and position) open across reloads
+- Shuffle feature
+- Search / filtering feature
+- Sort by columns
+- Seek within a song
+- Volume control
+- VU meter or visualisation
+- Playlists, different track views
+- Support for thumbnails
+- Automatically reload if new songs are added to the backend
+- More tests!
 
 ## Installation
 ### 1. Downloading
@@ -81,6 +104,4 @@ _(Any format supported by both ffmpeg and the npm 'music-metadata' package can b
 npm start
 ```
 The integrated react.js client will auto-launch in your browser.
-![rough around the edges...](https://github.com/MrTrick/musica/blob/master/docs/screenshot.jpg?raw=true)
-
-_(There's not much to look at yet!)_
+![Musica Client](https://github.com/MrTrick/musica/blob/master/docs/screenshot.jpg?raw=true)
