@@ -36,14 +36,30 @@ class App extends Component {
 
   render() {
     const { isLoading, isLoaded, isPlaying, tracks, current } = this.props;
-    const { onSelectTrack } = this.actions;
+    const { onSelectTrack, onPlayTrack, onPlay, onPause, onPrev, onNext } = this.actions;
 
     return (<>
       <NavBar/>
       {isLoading && (<Loading/>)}
-      {isLoaded && (<Tracks tracks={tracks} current={current} onSelectTrack={onSelectTrack}/>)}
-      <PlayerBar current={current} isPlaying={isPlaying} />
-      <Audio />
+      {isLoaded && (<Tracks
+        tracks={tracks}
+        current={current}
+        handleSelectTrack={onSelectTrack}
+        handlePlayTrack={onPlayTrack}
+      />)}
+      <PlayerBar
+        current={current}
+        isPlaying={isPlaying}
+        handlePlay={onPlay}
+        handlePause={onPause}
+        handlePrev={onPrev}
+        handleNext={onNext}
+      />
+      <Audio
+        current={current}
+        isPlaying={isPlaying}
+        handleTrackEnd={onNext}
+      />
     </>);
   }
 }

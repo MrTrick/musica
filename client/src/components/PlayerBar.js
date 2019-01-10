@@ -80,6 +80,9 @@ function PlayerBar(props) {
     thumb: classes.sliderThumb
   };
 
+  const { handlePlay, handlePause, handlePrev, handleNext } = props;
+  const noDefault = (f) => (e => { e.preventDefault(); f(); });
+
   return (<Tooltip title={progressLabel} aria-label={progressLabel}>
     <AppBar position="fixed" className={classes.root}>
       <SimpleSlider classes={sliderClasses}
@@ -87,13 +90,13 @@ function PlayerBar(props) {
         aria-label="Progress"
       />
       <Toolbar>
-        <IconButton aria-label="Previous Track"><SkipPrevIcon /></IconButton>
+        <IconButton aria-label="Previous Track" onClick={noDefault(handlePrev)}><SkipPrevIcon /></IconButton>
         {isPlaying ? (
-          <IconButton aria-label="Pause"><BigPauseIcon/></IconButton>
+          <IconButton aria-label="Pause" onClick={noDefault(handlePause)}><BigPauseIcon/></IconButton>
         ) : (
-          <IconButton aria-label="Play"><BigPlayIcon/></IconButton>
+          <IconButton aria-label="Play" onClick={noDefault(handlePlay)}><BigPlayIcon/></IconButton>
         )}
-        <IconButton aria-label="Next Track"><SkipNextIcon /></IconButton>
+        <IconButton aria-label="Next Track" onClick={noDefault(handleNext)}><SkipNextIcon /></IconButton>
 
         <div style={{flexGrow:1}}>
           <Typography component="h5" variant="h5">{title}</Typography>
@@ -112,7 +115,11 @@ function PlayerBar(props) {
 PlayerBar.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   current: PropTypes.object,
-  position: PropTypes.number
+  position: PropTypes.number,
+  handlePlay: PropTypes.func.isRequired,
+  handlePause: PropTypes.func.isRequired,
+  handlePrev: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PlayerBar);

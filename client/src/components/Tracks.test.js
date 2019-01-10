@@ -65,10 +65,7 @@ function fakeTrack(fields = {}) {
       format: {
         duration: number({min:30,max:600,precision:0.00001})
       },
-      src: {
-        mp3:`${server}/${id}.mp3`,
-        webm:`${server}/${id}.webm`
-      }
+      src: [`${server}/${id}.ogg`,`${server}/${id}.mp3`]
     },
     fields
   );

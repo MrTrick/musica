@@ -61,16 +61,17 @@ const rowStyles = (theme) => ({
 });
 
 function Row(props) {
-  const { classes, track, isCurrent, onSelectTrack } = props;
+  const { classes, track, isCurrent, handleSelectTrack, handlePlayTrack } = props;
   const rowClasses = isCurrent ? `${classes.root} ${classes.current}` : classes.root;
 
-  function onClickTrack(e) {
+  function handleClickTrack(e) {
     e.preventDefault();
-    if (!isCurrent) onSelectTrack(track);
+    if (isCurrent) handlePlayTrack(track);
+    else handleSelectTrack(track);
   }
 
   return (
-    <TableRow hover={true} className={rowClasses} onClick={onClickTrack}>
+    <TableRow hover={true} className={rowClasses} onClick={handleClickTrack}>
       <TableCell component="th" scope="row">
         {track.title||'Untitled'}
       </TableCell>
@@ -96,7 +97,8 @@ function Row(props) {
 Row.propTypes = {
   track: PropTypes.object.isRequired,
   isCurrent: PropTypes.bool.isRequired,
-  onSelectTrack: PropTypes.func.isRequired
+  handleSelectTrack: PropTypes.func.isRequired,
+  handlePlayTrack: PropTypes.func.isRequired
 };
 
 const StyledRow = withStyles(rowStyles)(Row);
@@ -111,7 +113,8 @@ const styles = (theme) => ({
 });
 
 function Tracks(props) {
-  const { classes, tracks, current, onSelectTrack } = props;
+  const { classes, tracks, current, handleSelectTrack, handlePlayTrack } = props;
+
   return (
     <Paper className={classes.root}>
       <Table>
@@ -120,7 +123,8 @@ function Tracks(props) {
           {tracks.map((track) => (<StyledRow
             track={track}
             isCurrent={current.id === track.id}
-            onSelectTrack={onSelectTrack}
+            handleSelectTrack={handleSelectTrack}
+            handlePlayTrack={handlePlayTrack}
             key={track.id}
           />))}
         </TableBody>
@@ -132,7 +136,8 @@ function Tracks(props) {
 Tracks.propTypes = {
   tracks: PropTypes.array.isRequired,
   current: PropTypes.object.isRequired,
-  onSelectTrack: PropTypes.func.isRequired
+  handleSelectTrack: PropTypes.func.isRequired,
+  handlePlayTrack: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Tracks);
