@@ -10,30 +10,47 @@ export const defaultState = {
   index: 0
 };
 
-//export const doLoadIndex = createAction('doLoadIndex'); needed?
-// export const doPlay = createAction('doPlay');
-// export const doPause = createAction('doPause');
-// export const doNext = createAction('doNext');
-// export const doPrev = createAction('doPrev');
-// export const doSeek = createAction('doSeek');
+export const doLoadTracks = createAction('doLoadTracks');
+export const didLoadTracks = createAction('didLoadTracks');
 
-export const actionLoadedTracks = createAction('actionLoadedTracks');
-// export const actoinPlay = createAction('onPlay');
-// export const onStop = createAction('onStop');
-// export const onEnd = createAction('onEnd');
-// export const onProgress = createAction('onProgress');
+export const onSelectTrack = createAction('onSelectTrack');
+
+
+export const doSetCurrent = createAction('doSetCurrent');
+
+export const doPlay = createAction('doPlay');
+export const doPause = createAction('doPause');
+export const doNext = createAction('doNext');
+export const doPrev = createAction('doPrev');
+export const doSeek = createAction('doSeek');
+
+export const didPlay = createAction('didPlay');
+export const didStop = createAction('didStop');
+export const didEnd = createAction('didEnd');
+export const didProgress = createAction('didProgress');
 
 export default createReducer(
   {
-    //Finished loading the track information - update the store.
-    [actionLoadedTracks]: (state, tracks) => ({
+    [doLoadTracks]: (state) => ({
+      ...state,
+      isLoading: true,
+      isLoaded: false
+    }),
+    [didLoadTracks]: (state, tracks) => ({
       ...state,
       isLoading: false,
       isLoaded: true,
       tracks: tracks,
       current: tracks[0], //Go to the first track
       index: 0
+    }),
+
+    [onSelectTrack]: (state, track) => ({
+      ...state,
+      current: track,
+      index: state.tracks.indexOf(track)
     })
+
   },
   defaultState
 );

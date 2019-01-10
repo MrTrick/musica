@@ -22,6 +22,8 @@ const BigPauseIcon = function() {
   return (<PauseIcon style={{height:38,width:38}} />);
 }
 
+//------------------------------------------------------------------------------
+
 class SimpleSlider extends React.Component {
   constructor(props) {
     super(props);
@@ -67,10 +69,12 @@ const styles = (theme) => ({
 });
 
 function PlayerBar(props) {
-  const { classes, isPlaying, title, artist, album, position, length } = props;
-  const progressLabel = isPlaying ? `${hhmmss(position)} / ${hhmmss(length)}` : '';
-  const progressNumber = isPlaying ? Math.floor(100*position/length) : 0;
+  const { classes, current, isPlaying, position } = props;
+  const { title, artist, album, format } = current||{};
+  const { duration } = format||{};
 
+  const progressLabel = isPlaying ? `${hhmmss(position)} / ${hhmmss(duration)}` : '';
+  const progressNumber = isPlaying ? Math.floor(100*position/duration) : 0;
   const sliderClasses = {
     track: classes.sliderTrack,
     thumb: classes.sliderThumb
@@ -84,7 +88,11 @@ function PlayerBar(props) {
       />
       <Toolbar>
         <IconButton aria-label="Previous Track"><SkipPrevIcon /></IconButton>
-        <IconButton aria-label="Play/Pause">{isPlaying ? (<BigPauseIcon/>) : (<BigPlayIcon/>)}</IconButton>
+        {isPlaying ? (
+          <IconButton aria-label="Pause"><BigPauseIcon/></IconButton>
+        ) : (
+          <IconButton aria-label="Play"><BigPlayIcon/></IconButton>
+        )}
         <IconButton aria-label="Next Track"><SkipNextIcon /></IconButton>
 
         <div style={{flexGrow:1}}>
@@ -103,21 +111,8 @@ function PlayerBar(props) {
 
 PlayerBar.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  artist: PropTypes.string.isRequired,
-  album: PropTypes.string,
-  position: PropTypes.number,
-  length: PropTypes.number.isRequired
-};
-
-//TODO: Remove these placeholder values
-PlayerBar.defaultProps = {
-  isPlaying: true,
-  title: "The Sound of Silence",
-  artist: "Simon & Garfunkel",
-  album: "The Best of Simon & Garfunkel",
-  position: 65,
-  length: 187
+  current: PropTypes.object,
+  position: PropTypes.number
 };
 
 export default withStyles(styles)(PlayerBar);
