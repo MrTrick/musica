@@ -9,14 +9,15 @@
 const program = require('commander');
 const plimit = require('p-limit');
 const { ingestFile } = require('./src/ingest');
-const Storage = require('./src/storage');
+const Storage = require('./src/storage/s3');
 
 
 //==============================================================================
 
 program
   .version('0.1.0')
-  .description("Command-line tool for managing the musica backend");
+  .description("Command-line tool for managing the musica backend")
+  .option('-b, --backend', '');
 
 //------------------------------------------------------------------------------
 

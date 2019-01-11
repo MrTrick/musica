@@ -4,7 +4,7 @@
  * @author Patrick Barnes
  */
 
-const Storage = require('./storage');
+const Storage = require('./s3');
 
 //Clear any auto-configured options
 //TODO: Best practices? Is there a *neat* way to bring env vars in

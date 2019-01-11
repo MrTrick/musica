@@ -12,7 +12,7 @@ const execFile = promisify(require('child_process').execFile);
 const md5File = promisify(require('md5-file'));
 const unlink = promisify(require('fs').unlink);
 
-const Storage = require('./storage');
+const Storage = require('./storage/s3');
 
 //==============================================================================
 
