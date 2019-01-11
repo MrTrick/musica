@@ -1,12 +1,12 @@
 {
-  "main.js": "/musica/static/js/main.6d6c6a8e.chunk.js",
-  "main.js.map": "/musica/static/js/main.6d6c6a8e.chunk.js.map",
+  "main.js": "/musica/static/js/main.bb160bb1.chunk.js",
+  "main.js.map": "/musica/static/js/main.bb160bb1.chunk.js.map",
   "static/js/1.ed5a6976.chunk.js": "/musica/static/js/1.ed5a6976.chunk.js",
   "static/js/1.ed5a6976.chunk.js.map": "/musica/static/js/1.ed5a6976.chunk.js.map",
   "runtime~main.js": "/musica/static/js/runtime~main.a8e86bf5.js",
   "runtime~main.js.map": "/musica/static/js/runtime~main.a8e86bf5.js.map",
   "static/media/logo.svg": "/musica/static/media/logo.fc368120.svg",
   "index.html": "/musica/index.html",
-  "precache-manifest.1975d8d58264c97d88eb1a3791b8fe34.js": "/musica/precache-manifest.1975d8d58264c97d88eb1a3791b8fe34.js",
+  "precache-manifest.b6b525c9c4b9922fad1c8443cc4a0b18.js": "/musica/precache-manifest.b6b525c9c4b9922fad1c8443cc4a0b18.js",
   "service-worker.js": "/musica/service-worker.js"
 }
