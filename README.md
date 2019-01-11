@@ -1,6 +1,7 @@
 # musica
 Simple cloud music Library / music Player  
-_Project in alpha state, not yet suitable for general use._
+
+[DEMO HERE](https://mrtrick.github.io/musica/)
 
 ![Musica Logo](https://github.com/MrTrick/musica/blob/master/docs/logo.png?raw=true)
 ----
