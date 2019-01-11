@@ -5,30 +5,31 @@
  * @license MIT License (c) copyright 2018 Patrick Barnes
  * @author Patrick Barnes
  */
+require('dotenv/config');
 
 const program = require('commander');
 const plimit = require('p-limit');
 const { ingestFile } = require('./src/ingest');
-const Storage = require('./src/storage/s3');
-
+const storageBuilder = require('./src/storage');
 
 //==============================================================================
 
 program
   .version('0.1.0')
-  .description("Command-line tool for managing the musica backend")
-  .option('-b, --backend', '');
+  .description("Command-line tool for managing the musica backend");
 
 //------------------------------------------------------------------------------
 
 program
   .command('init')
   .description('Create and initialise the data store')
+  .option('-t, --type <t>', 'Specify the storage type')
   .option('-f, --force', 'Continue even if the data store already exists')
   .action(function(options) {
     console.log("Connecting to storage...");
-    const storage = new Storage();
-    storage.configureStorage(options)
+    const storage = storageBuilder(options);
+
+    storage.establishStorage(options)
       .then(()=>{
         console.log("Data store initialised and ready for use.");
         process.exit(0);
@@ -43,11 +44,14 @@ program
 program
   .command('insert [files...]')
   .description('Scan, convert and upload any number of audio files.')
-  .action(function(files) {
+  .option('-t, --type <t>', 'Specify the storage type')
+  .action(function(files, options) {
     if (files.length == 0) {
       console.error("Error: Must provide at least one input file.");
       process.exit(1);
     }
+
+    const storage = storageBuilder(options);
 
     console.log(`Have ${files.length} files to process...`);
 
@@ -55,7 +59,7 @@ program
     const throttle = plimit(5);
     const throttledIngest = (file)=>throttle(()=>{
       console.log(`Processing ${file}...`);
-      return ingestFile(file)
+      return ingestFile(file, storage)
         .then((id)=>{
           console.log(`Finished processing ${file}. ID is ${id}.\n`);
           count.processed++;
@@ -81,10 +85,12 @@ program
 program
   .command('clear')
   .description('Remove any data (audio and metadata) from the data store.')
+  .option('-t, --type <t>', 'Specify the storage type')
   .option('-f, --force', 'Must be set, to confirm removal')
   .action(function(options) {
     console.log("Clearing all data...");
-    const storage = new Storage();
+
+    const storage = storageBuilder(options);
     storage.clearStorage(options)
       .then(()=>{
         console.log("Data store cleared successfully.");

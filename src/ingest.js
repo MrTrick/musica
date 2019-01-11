@@ -12,8 +12,6 @@ const execFile = promisify(require('child_process').execFile);
 const md5File = promisify(require('md5-file'));
 const unlink = promisify(require('fs').unlink);
 
-const Storage = require('./storage/s3');
-
 //==============================================================================
 
 /**
@@ -62,17 +60,16 @@ function transcodeFile(from, format) {
  * - Upload metadata and audio.
  *
  * @param  {string} file  Location of the audio file
+ * @param  {Storage} engine The storage engine to use
  * @return Promise that resolves when complete with the id.
  */
-function ingestFile(file) {
-  var storage = new Storage();
-
+function ingestFile(file, storage) {
   //Scan and convert the files
-  var getId = md5File(file);
-  var getFileMetadata = scanFile(file);
-  var checkExists = getId.then((id)=>storage.existsMetadata(id));
-  var transcodedMp3 = transcodeFile(file, 'mp3');
-  var transcodedOgg = transcodeFile(file, 'ogg');
+  const getId = md5File(file);
+  const getFileMetadata = scanFile(file);
+  const checkExists = getId.then((id)=>storage.existsMetadata(id));
+  const transcodedMp3 = transcodeFile(file, 'mp3');
+  const transcodedOgg = transcodeFile(file, 'ogg');
 
   //Notify users of progress
   getId.then((id)=>{

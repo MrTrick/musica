@@ -4,11 +4,7 @@
  * @author Patrick Barnes
  */
 
-const Storage = require('./s3');
-
-//Clear any auto-configured options
-//TODO: Best practices? Is there a *neat* way to bring env vars in
-//      that isn't seen when testing?
+//Clear any auto-configured defaults
 delete process.env.MUSICA_STORAGE_SERVER;
 delete process.env.MUSICA_STORAGE_SERVER;
 delete process.env.MUSICA_STORAGE_PORT;
@@ -17,6 +13,9 @@ delete process.env.MUSICA_ACCESS_KEY;
 delete process.env.MUSICA_SECRET_KEY;
 delete process.env.MUSICA_BUCKET_NAME;
 delete process.env.MUSICA_STORAGE_MEDIALOCATION;
+
+const Storage = require('./s3');
+
 
 test('Storage constructor', () => {
   expect(()=>{

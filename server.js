@@ -4,14 +4,14 @@
  * @license MIT License (c) copyright 2018 Patrick Barnes
  * @author Patrick Barnes
  */
-
+require('dotenv/config');
 const express = require('express');
 const morgan = require('morgan');
+const storageBuilder = require('./src/storage');
+
 const app = express();
 const port = process.env.PORT || 5000;
-
-const Storage = require('./src/storage');
-const storage = new Storage();
+const storage = storageBuilder();
 
 app.use(morgan('short'));
 

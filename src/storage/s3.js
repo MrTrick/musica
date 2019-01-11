@@ -1,10 +1,10 @@
 /**
  * Handle backend-storage concerns
+ * Uses S3 or compatible (minio server)
+ *
  * @license MIT License (c) copyright 2018 Patrick Barnes
  * @author Patrick Barnes
  */
-
-require('dotenv/config');
 const Minio = require('minio');
 const getStream = require('get-stream');
 
@@ -22,7 +22,7 @@ function defaults() {
 
 //==============================================================================
 
-class Storage {
+class StorageS3 {
 
   constructor(options) {
     options = Object.assign(defaults(), options);
@@ -88,7 +88,7 @@ class Storage {
    * @return Promise resolving with metadata object array
    */
   indexMetadata() {
-    var stream = this.client.listObjects(this.bucketName, 'metadata/', true);
+    const stream = this.client.listObjects(this.bucketName, 'metadata/', true);
 
     return getStream.array(stream)
       .then((list)=>Promise.all(list.map(({name})=>this.readMetadata(name))));
@@ -114,8 +114,8 @@ class Storage {
    * @return Promise that resolves when storage is complete
    */
   writeMetadata(metadata) {
-    var path = this.getMetadataPath(metadata.id);
-    var str = JSON.stringify(metadata);
+    const path = this.getMetadataPath(metadata.id);
+    const str = JSON.stringify(metadata);
 
     return this.client.putObject(this.bucketName, path, str, 'application/json');
   }
@@ -133,11 +133,11 @@ class Storage {
   //============================================================================
 
   /**
-   * Initialise the storage
+   * Create/configure/etc the storage
    * (should only need to be run the first time a new bucket is created)
    * @return Promise that resolves when the store is initialised.
    */
-  configureStorage(options) {
+  establishStorage(options) {
     console.log("Checking to see if bucket exists");
     return this.client.bucketExists(this.bucketName)
       .then((exists)=>{
@@ -185,10 +185,10 @@ class Storage {
         return Promise.reject("Will not clear storage without --force option.");
       }
       console.log(`Removing objects...`);
-      var names = list.map(({name})=>name);
+      const names = list.map(({name})=>name);
       return this.client.removeObjects(this.bucketName, names);
     });
   }
 }
 
-module.exports = Storage;
+module.exports = StorageS3;
