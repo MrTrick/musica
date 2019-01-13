@@ -17,7 +17,7 @@ class App extends Component {
   }
 
   loadTracks = async() => {
-    const response = await fetch('/musica');
+    const response = await fetch('musica');
     const body = await response.json();
 
     if (response.status !== 200) {
