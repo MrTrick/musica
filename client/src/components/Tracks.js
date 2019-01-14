@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
@@ -60,43 +60,72 @@ const rowStyles = (theme) => ({
   }
 });
 
-function Row(props) {
-  const { classes, track, isCurrent, handleSelectTrack, handlePlayTrack } = props;
-  const rowClasses = isCurrent ? `${classes.root} ${classes.current}` : classes.root;
-
-  function handleClickTrack(e) {
-    e.preventDefault();
-    if (isCurrent) handlePlayTrack(track);
-    else handleSelectTrack(track);
+class Row extends Component{
+  constructor(props) {
+    super(props);
+    this.handleClickTrack = this.handleClickTrack.bind(this);
   }
 
-  return (
-    <TableRow hover={true} className={rowClasses} onClick={handleClickTrack}>
-      <TableCell component="th" scope="row">
-        {track.title||'Untitled'}
-      </TableCell>
-      <TableCell>
-        {track.artist}
-        {track.albumartist && track.albumartist !== track.artist && (
-          <Typography style={{display:'inline'}} color="textSecondary"> - {track.albumartist}</Typography>
-        )}
-      </TableCell>
-      <TableCell>
-        {hhmmss(track.format.duration)}
-      </TableCell>
-      <TableCell>
-        {track.album}
-      </TableCell>
-      <TableCell>
-        {track.genre}
-      </TableCell>
-    </TableRow>
-  );
+  handleClickTrack(event) {
+    event.preventDefault();
+    const { isCurrent, track, handlePlayTrack, handleSelectTrack } = this.props;
+    if (isCurrent) {
+      handlePlayTrack && handlePlayTrack(track);
+    } else {
+      handleSelectTrack && handleSelectTrack(track);
+    }
+  }
+
+  matchesFilter(track, filter) {
+    if (!filter || (typeof filter !== 'string')) {
+      return true;
+    } else {
+      const _filter = filter.toLowerCase();
+      const fields = ['title', 'album', 'genre', 'artist', 'albumartist'];
+
+      return fields.find((f) => {
+        var v = track[f];
+        if (Array.isArray(v)) [v] = v;
+        return (typeof v == 'string') && v.toLowerCase().includes(_filter);
+      });
+    }
+  }
+
+  render() {
+    const { classes, track, isCurrent, filter } = this.props;
+    const rowClasses = isCurrent ? `${classes.root} ${classes.current}` : classes.root;
+
+    if (!this.matchesFilter(track, filter)) return null;
+
+    return (
+      <TableRow hover={true} className={rowClasses} onClick={this.handleClickTrack}>
+        <TableCell component="th" scope="row">
+          {track.title||'Untitled'}
+        </TableCell>
+        <TableCell>
+          {track.artist}
+          {track.albumartist && track.albumartist !== track.artist && (
+            <Typography style={{display:'inline'}} color="textSecondary"> - {track.albumartist}</Typography>
+          )}
+        </TableCell>
+        <TableCell>
+          {hhmmss(track.format.duration)}
+        </TableCell>
+        <TableCell>
+          {track.album}
+        </TableCell>
+        <TableCell>
+          {track.genre}
+        </TableCell>
+      </TableRow>
+    );
+  }
 }
 
 Row.propTypes = {
   track: PropTypes.object.isRequired,
   isCurrent: PropTypes.bool.isRequired,
+  filter: PropTypes.string,
   handleSelectTrack: PropTypes.func.isRequired,
   handlePlayTrack: PropTypes.func.isRequired
 };
@@ -112,30 +141,34 @@ const styles = (theme) => ({
   }
 });
 
-function Tracks(props) {
-  const { classes, tracks, current, handleSelectTrack, handlePlayTrack } = props;
+class Tracks extends Component {
+  render() {
+    const { classes, tracks, current, filter, handleSelectTrack, handlePlayTrack } = this.props;
 
-  return (
-    <Paper className={classes.root}>
-      <Table>
-        <StyledHead/>
-        <TableBody>
-          {tracks.map((track) => (<StyledRow
-            track={track}
-            isCurrent={current.id === track.id}
-            handleSelectTrack={handleSelectTrack}
-            handlePlayTrack={handlePlayTrack}
-            key={track.id}
-          />))}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
+    return (
+      <Paper className={classes.root}>
+        <Table>
+          <StyledHead/>
+          <TableBody>
+            {tracks.map((track) => (<StyledRow
+              track={track}
+              filter={filter}
+              isCurrent={current.id === track.id}
+              handleSelectTrack={handleSelectTrack}
+              handlePlayTrack={handlePlayTrack}
+              key={track.id}
+            />))}
+          </TableBody>
+        </Table>
+      </Paper>
+    );
+  }
 }
 
 Tracks.propTypes = {
   tracks: PropTypes.array.isRequired,
   current: PropTypes.object.isRequired,
+  filter: PropTypes.string,
   handleSelectTrack: PropTypes.func.isRequired,
   handlePlayTrack: PropTypes.func.isRequired
 };

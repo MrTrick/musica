@@ -1,4 +1,5 @@
-import { createAction, createReducer } from 'redux-act';
+import { createReducer } from 'redux-act';
+import actions from './actions';
 
 export const initialState = {
   isLoading: false,
@@ -8,70 +9,62 @@ export const initialState = {
   tracks: [],
   current: null,
   index: 0,
-  progress: 0
+  progress: 0,
+  filter: ''
 };
-
-export const doLoadTracks = createAction('doLoadTracks');
-export const didLoadTracks = createAction('didLoadTracks');
-
-export const onSelectTrack = createAction('onSelectTrack');
-export const onPlayTrack = createAction('onPlayTrack');
-
-export const onPlay = createAction('onPlay');
-export const onPause = createAction('onPause');
-export const onPrev = createAction('onPrev');
-export const onNext = createAction('onNext');
-
-export const onProgress = createAction('onProgress');
 
 export default createReducer(
   {
-    [doLoadTracks]: (state) => ({...state,
+    [actions.loadTracks]: (state) => ({...state,
       isLoading: true,
       isLoaded: false
     }),
 
-    [didLoadTracks]: (state, tracks) => ({...state,
+    [actions.loadedTracks]: (state, tracks) => ({...state,
       isLoading: false,
       isLoaded: true,
-      tracks: tracks,
-      current: tracks[0], //Go to the first track
+      tracks: tracks || [],
+      current: tracks && tracks[0], //Go to the first track
       index: 0
     }),
 
-    [onSelectTrack]: (state, track) => ({...state,
+    [actions.selectTrack]: (state, track) => ({...state,
       current: track,
       index: state.tracks.indexOf(track)
     }),
 
-    [onPlayTrack]: (state, track) => ({...state,
+    [actions.playTrack]: (state, track) => ({...state,
       current: track,
       index: state.tracks.indexOf(track),
       isPlaying: true
     }),
 
-    [onPlay]: (state) => ({...state,
+    [actions.play]: (state) => ({...state,
       isPlaying: true
     }),
 
-    [onPause]: (state) => ({...state,
+    [actions.pause]: (state) => ({...state,
       isPlaying: false
     }),
 
-    [onNext]: (state) => {
+    [actions.next]: (state) => {
       const { index, tracks } = state;
       const next = Math.min(index + 1, tracks.length - 1);
       return {...state, index:next, current:tracks[next]};
     },
 
-    [onPrev]: (state) => {
+    [actions.prev]: (state) => {
       const { index, tracks } = state;
       const prev = Math.max(index - 1, 0);
       return {...state, index:prev, current:tracks[prev]};
     },
 
-    [onProgress]: (state, progress) => ({...state,
+    [actions.progress]: (state, progress) => ({...state,
       progress
+    }),
+
+    [actions.search]: (state, filter) => ({...state,
+      filter
     })
   },
   initialState

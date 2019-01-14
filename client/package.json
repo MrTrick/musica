@@ -14,7 +14,8 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-act": "^1.7.4",
-    "request-interval": "^2.0.0"
+    "request-interval": "^2.0.0",
+    "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,7 +35,8 @@
   "proxy": "http://localhost:5000/",
   "devDependencies": {
     "faker": "^4.1.0",
-    "gh-pages": "^2.0.1"
+    "gh-pages": "^2.0.1",
+    "redux-logger": "^3.0.6"
   },
   "homepage": "https://mrtrick.github.io/musica"
 }

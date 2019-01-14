@@ -1,15 +1,23 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import App from './components/App';
-
-import theme from './theme';
 import rootReducer from './reducers';
-const store = createStore(rootReducer);
+import theme from './theme';
+
+require('typeface-roboto');
+
+const middlewares = [];
+if (process.env.NODE_ENV === `development`) {
+  const { logger } = require(`redux-logger`);
+  middlewares.push(logger);
+}
+
+const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 render(
   <Provider store={store}>

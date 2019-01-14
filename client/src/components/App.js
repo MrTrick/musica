@@ -8,7 +8,7 @@ import Tracks from './Tracks';
 import PlayerBar from './PlayerBar';
 import Audio from './Audio';
 
-import * as unboundActions from '../reducers.js';
+import unboundActions from '../actions.js';
 
 class App extends Component {
   constructor(props) {
@@ -27,40 +27,45 @@ class App extends Component {
   };
 
   componentDidMount() {
-    const { didLoadTracks } = this.actions;
+    const actions = this.actions;
 
+    actions.loadTracks();
     this.loadTracks()
-       .then(didLoadTracks)
+       .then((tracks)=>actions.loadedTracks(tracks))
        .catch(err => console.log(err));
   };
 
   render() {
-    const { isLoading, isLoaded, isPlaying, tracks, current, progress } = this.props;
-    const { onSelectTrack, onPlayTrack, onPlay, onPause, onPrev, onNext, onProgress } = this.actions;
+    const { isLoading, isLoaded, isPlaying, tracks, current, progress, filter } = this.props;
+    const actions = this.actions;
 
     return (<>
-      <NavBar/>
+      <NavBar
+        filter={filter}
+        handleSearch={actions.search}
+      />
       {isLoading && (<Loading/>)}
       {isLoaded && (<Tracks
         tracks={tracks}
         current={current}
-        handleSelectTrack={onSelectTrack}
-        handlePlayTrack={onPlayTrack}
+        filter={filter}
+        handleSelectTrack={actions.selectTrack}
+        handlePlayTrack={actions.playTrack}
       />)}
       <PlayerBar
         current={current}
         isPlaying={isPlaying}
         progress={progress}
-        handlePlay={onPlay}
-        handlePause={onPause}
-        handlePrev={onPrev}
-        handleNext={onNext}
+        handlePlay={actions.play}
+        handlePause={actions.pause}
+        handlePrev={actions.prev}
+        handleNext={actions.next}
       />
       <Audio
         current={current}
         isPlaying={isPlaying}
-        handleTrackEnd={onNext}
-        handleProgress={onProgress}
+        handleTrackEnd={actions.next}
+        handleProgress={actions.progress}
       />
     </>);
   }
