@@ -22,7 +22,7 @@
     "demo-media-export": "cross-env MUSICA_STORAGE_TYPE=fs MUSICA_STORAGE_PATH=demo/musica/media MUSICA_STORAGE_MEDIALOCATION=/musica/media node musica export > demo/musica/musica",
     "demo-build": "run-s demo-clean demo-client-build demo-media-init demo-media-insert demo-media-export",
     "demo-start": "serve ./demo/",
-    "demo-publish": "cross-env NODE_DEBUG=gh-pages gh-pages -d ./demo/"
+    "demo-publish": "cross-env NODE_DEBUG=gh-pages gh-pages -d ./demo/musica/"
   },
   "dependencies": {
     "commander": "^2.19.0",
