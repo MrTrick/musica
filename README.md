@@ -66,13 +66,9 @@ These values could alternatively be written in an `.env` file within the top-lev
 You can configure **musica** to use AWS S3, or run your own storage server.
 See the **Minio** section further ahead.
 
-### 3. Other Dependencies
-**musica** requires ffmpeg >2.8.1 for media transcoding.  
-```
-node musica check-ffmpeg
-```
-
-**musica** requires an AWS S3-compatible storage server. _(for one option, see **Minio**)_
+### 3. Backend ###
+**musica**'s default configuration requires an AWS S3-compatible storage server.
+This can be AWS S3, or there are other options available:
 
 ### 3a. Minio
 **Minio** is an S3-compatible object storage server.
@@ -84,6 +80,19 @@ docker run -p 9000:9000 --name minio1 -e "MINIO_ACCESS_KEY=SOMETHINGSOMETHINGEXA
 Ensure that the details passed to the Docker instance match those configured in your **musica** environmental variables.
 
 _(For more information see https://docs.minio.io/ )_
+
+### 3b. File System
+As a fallback, the app can store media and metadata in a filesystem.  
+Set the server configuration as:
+```
+MUSICA_STORAGE_TYPE=fs
+MUSICA_STORAGE_PATH=/var/media
+MUSICA_STORAGE_MEDIALOCATION=https://cdn.example.com/media
+```
+
+* `MUSICA_STORAGE_PATH` is the filesystem location where media and metadata will be stored.
+* `MUSICA_STORAGE_MEDIALOCATION` is the URL where the media and metadata can be reached.
+  _(Separately from the server process - should run in a static server like `npx http-server` or Nginx.)_
 
 ### 4. Initialising
 The **musica** bucket needs to be created and the access policies set to allow public read access.  
