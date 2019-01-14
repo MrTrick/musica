@@ -6,7 +6,6 @@
  * @author Patrick Barnes
  */
 const fs = require('fs');
-const { URL } = require('url');
 const { promisify } = require('util');
 const readFile = promisify( fs.readFile );
 const readDir = promisify( fs.readdir );
@@ -29,19 +28,19 @@ class StorageFS {
   constructor(options) {
     options = Object.assign(defaults(), options);
 
-    var { path, mediaLocation } = options;
+    const { path, mediaLocation } = options;
 
-    //Check the path - throw exception if not given, missing or not a dir
+    //Check the path - throw exception if not given or not a dir
     if (!path) throw new Error("path is required");
-    const stats = fs.lstatSync(path);
-    if (!stats.isDirectory()) {
-      throw new Error("path is not a valid folder");
+    if (fs.existsSync(path)) {
+      const stats = fs.lstatSync(path);
+      if (stats.isFile()) {
+        throw new Error("path is not a valid folder");
+      }
     }
 
-    //Check media location - throw if not given or not a URL.
+    //Check media location - throw if not given
     if (!mediaLocation) throw new Error('mediaLocation is required');
-    const url = new URL(mediaLocation);
-    mediaLocation = url.href;
 
     Object.assign(this, { path, mediaLocation});
   }
@@ -140,8 +139,13 @@ class StorageFS {
    * @return Promise that resolves when the store is initialised.
    */
   establishStorage() {
-    console.log("Ensuring that metadata folder exists.");
-    return mkdir(`${this.path}/metadata`, { recursive: true });
+    function ignoreExists(err) {
+      if (err.code != 'EEXIST') throw err;
+    }
+
+    console.log("Ensuring that storage and metadata folder exists.");
+    return mkdir(this.path).catch(ignoreExists)
+      .then(()=>mkdir(`${this.path}/metadata`)).catch(ignoreExists);
   }
 
   //============================================================================

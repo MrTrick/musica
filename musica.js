@@ -9,6 +9,9 @@ require('dotenv/config');
 
 const program = require('commander');
 const plimit = require('p-limit');
+const { promisify } = require('util');
+const glob = promisify( require('glob') );
+
 const { ingestFile } = require('./src/ingest');
 const storageBuilder = require('./src/storage');
 
@@ -52,32 +55,52 @@ program
     }
 
     const storage = storageBuilder(options);
-
-    console.log(`Have ${files.length} files to process...`);
-
     const count = { processed: 0, failed: 0 };
-    const throttle = plimit(5);
-    const throttledIngest = (file)=>throttle(()=>{
-      console.log(`Processing ${file}...`);
-      return ingestFile(file, storage)
-        .then((id)=>{
-          console.log(`Finished processing ${file}. ID is ${id}.\n`);
-          count.processed++;
-        })
-        .catch((err)=>{
-          console.log(`Failed to process ${file}: ${err}`);
-          count.failed++;
-        });
+
+    //Expand any glob file patterns
+    const scanFiles = Promise.all(files.map((file)=>glob(file)))
+      .then((files)=>[].concat(...files));
+
+    //Process them
+    const processFiles = scanFiles.then((files)=>{
+      console.log(`Have ${files.length} files to process...`);
+
+      const throttle = plimit(5);
+      const throttledIngest = (file)=>throttle(()=>{
+        console.log(`Processing ${file}...`);
+        return ingestFile(file, storage)
+          .then((id)=>{
+            console.log(`Finished processing ${file}. ID is ${id}.\n`);
+            count.processed++;
+          })
+          .catch((err)=>{
+            console.log(`Failed to process ${file}: ${err}`);
+            count.failed++;
+          });
+      });
+
+      return Promise.all(files.map(throttledIngest));
     });
 
-    Promise.all(files.map(throttledIngest))
-      .then(()=>{
-        console.log("Finished");
-        console.log(`Processed ${count.processed} audio tracks.`);
-        console.log(`Could not process ${count.failed} audio tracks.`);
+    processFiles.then(()=>{
+      console.log("Finished");
+      console.log(`Processed ${count.processed} audio tracks.`);
+      console.log(`Could not process ${count.failed} audio tracks.`);
 
-        process.exit(count.failed ? 1 : 0);
-      });
+      process.exit(count.failed ? 1 : 0);
+    });
+  });
+
+//----------------------------------------------------------------------------
+
+program
+  .command('export')
+  .description('Export the metadata index from the data store.')
+  .action(function(options) {
+    const storage = storageBuilder(options);
+
+    storage.indexMetadata()
+      .then((metadata)=>console.log(JSON.stringify(metadata)));
   });
 
 //----------------------------------------------------------------------------
