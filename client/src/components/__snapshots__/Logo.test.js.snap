@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`looks like a logo should 1`] = `
+<img
+  alt="Musica Logo"
+  aria-label="Musica Logo"
+  src="logo.svg"
+/>
+`;

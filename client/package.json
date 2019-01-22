@@ -20,6 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "test-watch": "react-scripts test",
     "test": "cross-env CI=true react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -34,10 +35,18 @@
   ],
   "proxy": "http://localhost:5000/",
   "devDependencies": {
+    "cross-env": "^5.2.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "enzyme-to-json": "^3.3.5",
     "faker": "^4.1.0",
     "gh-pages": "^2.0.1",
-    "redux-logger": "^3.0.6",
-    "cross-env": "^5.2.0"
+    "react-test-renderer": "^16.7.0",
+    "redux-logger": "^3.0.6"
+  },
+  "jest": {
+    
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
   },
   "homepage": "https://mrtrick.github.io/musica"
 }
