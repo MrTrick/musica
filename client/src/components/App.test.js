@@ -12,8 +12,9 @@ const initialState = {
   tracks: [],
   current: null,
   index: 0,
-  progress: 0
-}
+  progress: 0,
+  filter: ''
+};
 
 it('renders without crashing', () => {
   const store = createStore(()=>initialState);

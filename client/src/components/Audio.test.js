@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NavBar from './NavBar';
+import Audio from './Audio';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-
-  ReactDOM.render(<NavBar
-    filter=''
-    handleSearch={()=>{}}
+  ReactDOM.render(<Audio
+    isPlaying={false}
+    handleProgress={()=>{}}
+    handleTrackEnd={()=>{}}
   />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

@@ -4,7 +4,10 @@ import InputSearch from './InputSearch';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<InputSearch />, div);
+  ReactDOM.render(<InputSearch
+    value=''
+    handleChange={()=>{}}
+  />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
 
