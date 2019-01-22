@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`looks like it should 1`] = `
+<WithStyles(AppBar)
+  position="static"
+>
+  <WithStyles(Toolbar)>
+    <Logo />
+    <div
+      className="NavBar-grow-73"
+    />
+    <WithStyles(InputSearch)
+      handleChange={[Function]}
+      value="Alt Rock"
+    />
+  </WithStyles(Toolbar)>
+</WithStyles(AppBar)>
+`;

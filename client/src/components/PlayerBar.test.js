@@ -17,4 +17,21 @@ it('renders without crashing', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
+it('looks like it should', () => {
+  const wrapper = shallow(
+    <PlayerBar
+      current={fakeTrack()}
+      isPlaying={false}
+      progress={0}
+      handlePlay={()=>{}}
+      handlePause={()=>{}}
+      handlePrev={()=>{}}
+      handleNext={()=>{}}
+    />
+  ).dive().dive(); //Go down two levels because top-level isn't helpful.
+
+  expect(wrapper).toMatchSnapshot();
+});
+
+
 //TODO more tests
