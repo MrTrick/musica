@@ -1,4 +1,4 @@
-import { fake, random, date, internet } from 'faker';
+import faker, { fake, random, date, internet } from 'faker';
 
 const { number } = random;
 const choose = random.arrayElement;
@@ -9,6 +9,14 @@ export const genres = [
   "Inspirational","Asian Pop","Jazz","Latin Music","New Age","Opera","Pop",
   "R&B","Soul","Reggae","Rock","Folk","World Music"
 ];
+
+/**
+ * Expose the faker PRNG seeder - so tests can "freeze" generated objects.
+ * @param  {number} s
+ */
+export function seed(s) {
+  return faker.seed(s);
+}
 
 /**
  * Generate random ids in the same format as the server
@@ -25,7 +33,7 @@ export function fakeId() {
  * @return {bool}
  */
 export function prob(p) {
-  return Math.random() < p;
+  return random.number({min:0,max:9999}) < 10000*p;
 }
 
 /**

@@ -433,13 +433,18 @@ exports[`looks like it should 1`] = `
           component="h5"
           variant="h5"
         >
-          CFA Franc BEAC
+          Licensed Forward deposit
         </WithStyles(Typography)>
         <WithStyles(Typography)
           color="textSecondary"
           variant="subtitle1"
         >
-          Ephraim Jacobi
+          Roxanne Casper
+          <em>
+             (
+            teal Curve
+            )
+          </em>
         </WithStyles(Typography)>
       </div>
     </WithStyles(Toolbar)>

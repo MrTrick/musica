@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PlayerBar from './PlayerBar';
-import { fakeTrack } from '../testutils';
+import { seed, fakeTrack } from '../testutils';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -18,9 +18,11 @@ it('renders without crashing', () => {
 });
 
 it('looks like it should', () => {
+  seed(113);
+  const track = fakeTrack();
   const wrapper = shallow(
     <PlayerBar
-      current={fakeTrack()}
+      current={track}
       isPlaying={false}
       progress={0}
       handlePlay={()=>{}}
