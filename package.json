@@ -32,7 +32,7 @@
     "ffmpeg-static": "^2.4.0",
     "get-stream": "^4.1.0",
     "md5-file": "^4.0.0",
-    "minio": "^7.0.2",
+    "minio": "^7.1.1",
     "morgan": "^1.9.1",
     "music-metadata": "^3.2.4",
     "p-limit": "^2.0.0",
