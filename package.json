@@ -28,7 +28,7 @@
     "commander": "^2.19.0",
     "dotenv": "^6.2.0",
     "eslint": "^9.32.0",
-    "express": "^4.21.2",
+    "express": "^4.22.1",
     "ffmpeg-static": "^2.4.0",
     "get-stream": "^4.1.0",
     "md5-file": "^4.0.0",
