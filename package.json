@@ -37,7 +37,7 @@
     "music-metadata": "^11.12.3",
     "p-limit": "^2.0.0",
     "tmp": "0.2.4",
-    "uuid": "^3.3.2"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
